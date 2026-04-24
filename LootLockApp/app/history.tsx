@@ -1,54 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, FlatList, SafeAreaView } from 'react-native';
-import { BleManager } from 'react-native-ble-plx';
 import { useLogs } from '../context/LogContext'; 
+import { bluetoothService } from '../services/bluetooth';
 
-let manager: any = null;
-try {
-  manager = new BleManager();
-} catch (e) {
-  console.log("Mode Simulation détecté.");
-}
+const HC05_MAC_ADDRESS = "98D3:31:F6132F"; 
 
 export default function LootLockScreen() {
   const { logs, users, processScan } = useLogs();
-  const [isBTAvailable, setIsBTAvailable] = useState(false);
+  const [btStatus, setBtStatus] = useState("Déconnecté");
+  const [device, setDevice] = useState<any>(null);
 
   useEffect(() => {
-    if (manager) setIsBTAvailable(true);
-  }, []);
+    return () => {
+      if (device) bluetoothService.disconnect(device);
+    };
+  }, [device]);
+
+  const connectToHC05 = async () => {
+    setBtStatus("Connexion en cours...");
+    const connectedDevice = await bluetoothService.connectToHC05(HC05_MAC_ADDRESS);
+    
+    if (connectedDevice) {
+      setDevice(connectedDevice);
+      setBtStatus("✅ Connecté au HC-05");
+      
+      bluetoothService.startListening(connectedDevice, (data) => {
+        processScan(data);
+      });
+    } else {
+      setBtStatus("❌ Échec de connexion");
+    }
+  };
 
   const simulateNFCScan = () => {
     let uidToTest = "BADGE_INCONNU";
-    
     if (users && users.length > 0) {
-      const randomUser = users[Math.floor(Math.random() * users.length)];
-      uidToTest = randomUser.id;
+      uidToTest = users[Math.floor(Math.random() * users.length)].id;
     }
-
     processScan(uidToTest);
-  };
-
-  const rejetUser = () => {
-    processScan("00000")
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>LootLock 🔒</Text>
-        <Text style={styles.status}>
-          Statut : {isBTAvailable ? "✅ Bluetooth Actif" : "⚠️ Mode Simulation"}
-        </Text>
+        <Text style={styles.status}>Statut BT : {btStatus}</Text>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={simulateNFCScan}>
-        <Text style={styles.buttonText}>SIMULER UN SCAN NFC</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={[styles.button, styles.btButton]} onPress={connectToHC05}>
+          <Text style={styles.buttonText}>CONNECTER LE HC-05</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.button, { backgroundColor: '#FF3B30' }]} onPress={rejetUser}> 
-        <Text style={styles.buttonText}>SIMULER UN SCAN REFUSÉ</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={simulateNFCScan}>
+          <Text style={styles.buttonText}>SIMULER UN SCAN</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.listContainer}>
         <Text style={styles.historyTitle}>Historique des accès</Text>
@@ -83,22 +90,15 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F7' },
   header: { padding: 20, alignItems: 'center', backgroundColor: '#FFF', elevation: 2 },
   title: { fontSize: 28, fontWeight: '800', color: '#1D1D1F' },
-  status: { fontSize: 14, color: '#86868B', marginTop: 5 },
-  button: {
-    backgroundColor: '#007AFF', margin: 20, padding: 18, borderRadius: 12, alignItems: 'center',
-    shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4,
-  },
-  buttonText: { color: '#FFF', fontSize: 16, fontWeight: '600' },
-  listContainer: { flex: 1, paddingHorizontal: 20 },
+  status: { fontSize: 14, color: '#86868B', marginTop: 5, fontWeight: 'bold' },
+  buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 20 },
+  button: { flex: 1, backgroundColor: '#007AFF', padding: 15, borderRadius: 12, alignItems: 'center', marginHorizontal: 5 },
+  btButton: { backgroundColor: '#34C759' },
+  buttonText: { color: '#FFF', fontSize: 14, fontWeight: '600' },
+  listContainer: { flex: 1, paddingHorizontal: 20, marginTop: 20 },
   historyTitle: { fontSize: 18, fontWeight: '700', marginBottom: 15, color: '#1D1D1F' },
-  
-  // Amélioration du design des cartes selon le statut
-  logCard: {
-    backgroundColor: '#FFF', padding: 15, borderRadius: 10, flexDirection: 'row', 
-    justifyContent: 'space-between', alignItems: 'center', marginBottom: 10,
-    borderLeftWidth: 5, borderLeftColor: '#34C759', // Ligne verte par défaut
-  },
-  logCardRefused: { borderLeftColor: '#FF3B30' }, // Ligne rouge si refusé
+  logCard: { backgroundColor: '#FFF', padding: 15, borderRadius: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, borderLeftWidth: 5, borderLeftColor: '#34C759' },
+  logCardRefused: { borderLeftColor: '#FF3B30' },
   logName: { fontSize: 16, fontWeight: '600', color: '#1D1D1F' },
   logDate: { fontSize: 12, color: '#86868B', marginTop: 2 },
   logTime: { fontSize: 16, fontWeight: '700', color: '#1D1D1F' },
