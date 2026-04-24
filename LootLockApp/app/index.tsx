@@ -14,7 +14,7 @@ export default function HomeScreen() {
         <Text style={styles.title}>LootLock</Text>
         <Text style={styles.subtitle}>Bienvenue dans votre interface sécurisée</Text>
 
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/acces')}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/history')}>
           <Text style={styles.buttonText}>Voir l'historique</Text>
         </TouchableOpacity>
 
