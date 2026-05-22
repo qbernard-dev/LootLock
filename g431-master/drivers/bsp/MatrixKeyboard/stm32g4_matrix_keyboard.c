@@ -116,9 +116,9 @@ void BSP_MATRIX_KEYBOARD_demo_process_main (void)
 			BSP_systick_add_callback_function(BSP_MATRIX_KEYBOARD_demo_process_1ms);
 
 			//A modifier en fonction du clavier utilisé : par défaut, personnalisé ou personnalisé 12 touches
-			//KEYBOARD_init(NULL);						//Initialisation du clavier avec le clavier par défaut
+			//BSP_MATRIX_KEYBOARD_init(NULL);						//Initialisation du clavier avec le clavier par défaut
 			BSP_MATRIX_KEYBOARD_init(default_keyboard_keys);			//Initialisation du clavier avec un clavier personnalisé
-			//KEYBOARD_init(custom_keyboard_12_touchs);	//Initialisation du clavier avec un clavier personnalisé 12 touches
+			//BSP_MATRIX_KEYBOARD_init(custom_keyboard_12_touchs);	//Initialisation du clavier avec un clavier personnalisé 12 touches
 
 			//pensez à renseigner les bons ports dans matrix_keyboard.h en fonction de votre hardware.
 			printf("To run this demo, you should plug a matrix keyboard on the right ports. See matrix_keyboard.h\n");
@@ -421,6 +421,71 @@ static bool keyboard_pin_read(uint32_t port, uint16_t pin)
 		printf(warning_string);
 	}
 	return ret;
+}
+
+char BSP_MATRIX_KEYBOARD_process_main (void)
+{
+	typedef enum
+	{
+		INIT = 0,
+		RUN
+	}state_e;
+	static state_e state = INIT;
+
+	char press_key_event, release_key_event;
+	uint32_t all_touch_pressed;
+	char key_pressed = '\0';
+
+	switch(state)
+	{
+		case INIT:
+			BSP_systick_add_callback_function(BSP_MATRIX_KEYBOARD_demo_process_1ms);
+
+			//A modifier en fonction du clavier utilisé : par défaut, personnalisé ou personnalisé 12 touches
+			//KEYBOARD_init(NULL);						//Initialisation du clavier avec le clavier par défaut
+			BSP_MATRIX_KEYBOARD_init(default_keyboard_keys);			//Initialisation du clavier avec un clavier personnalisé
+			//BSP_MATRIX_KEYBOARD_init(custom_keyboard_12_touchs);	//Initialisation du clavier avec un clavier personnalisé 12 touches
+
+			//pensez à renseigner les bons ports dans matrix_keyboard.h en fonction de votre hardware.
+			printf("To run this demo, you should plug a matrix keyboard on the right ports. See matrix_keyboard.h\n");
+			state = RUN;
+			break;
+		case RUN:
+
+			//pour éviter les rebonds, il est important de lire le clavier toutes les 10ms environ.
+			if(!t)	//A chaque fois que t vaut 0 (toutes les 10ms)...
+			{
+				t = 10;							//[ms] On recharge le chronomètre t pour 10ms...
+				BSP_MATRIX_KEYBOARD_press_and_release_events(&press_key_event, &release_key_event, &all_touch_pressed);
+				switch(press_key_event)
+				{
+					case NO_KEY:
+						break;
+					case MANY_KEYS:
+						printf("Many keys pressed : %lx\n", all_touch_pressed);
+						break;
+					default:
+						key_pressed = press_key_event;
+						printf("%c pressed\n", press_key_event);
+						break;
+				}
+				switch(release_key_event)
+				{
+					case NO_KEY:
+						break;
+					case MANY_KEYS:
+						printf("Many keys released : %lx\n", all_touch_pressed);
+						break;
+					default:
+						printf("%c released\n", release_key_event);
+						break;
+				}
+			}
+			break;
+		default:
+			break;
+	}
+	return key_pressed;
 }
 
 

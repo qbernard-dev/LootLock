@@ -41,7 +41,7 @@
 #define USE_DAC				0
 
 /*------------------Afficheurs------------------*/
-#define USE_ILI9341			0 // écran TFT
+#define USE_ILI9341			1 // écran TFT
 #if USE_ILI9341
 	#define USE_XPT2046			1
 	#define USE_FONT7x10		1
@@ -60,11 +60,11 @@
 #define USE_DHT11			0 // Capteur de température et d'humidité
 #define USE_DS18B20			0 // Sonde de température
 #define USE_YX6300			0 // Lecteur MP3
-#define USE_MATRIX_KEYBOARD 0 // Clavier matriciel
+#define USE_MATRIX_KEYBOARD 1 // Clavier matriciel
 #define USE_HCSR04			0 // Télémetre à ultrason
 #define USE_GPS				0 // GPS
 #define USE_LD19			0 // Lidar --> veuillez aussi activer USE_ILI9341, USE_XPT2046, USE_FONT7x10 et USE_FONT16x26 si vous voulez utiliser display_ld19.c
-#define USE_NFC03A1			0 // Shield NFC
+#define USE_NFC03A1			1 // Shield NFC
 #define USE_VL53L0			0 // Télémetre laser de grande précision
 #if USE_VL53L0
 	#define VL53L0X_I2C			I2C1
@@ -76,8 +76,8 @@
 #endif
 
 /*------------------Expanders------------------*/
-#define USE_MCP23017		0 // GPIO expander qui communique en i2C
-#define USE_MCP23S17		0 // GPIO expander qui communique en SPI
+#define USE_MCP23017		1 // GPIO expander qui communique en i2C
+#define USE_MCP23S17		1 // GPIO expander qui communique en SPI
 #define USE_SD_CARD			0 // Carte SD pour lire/écrire des fichiers
 
 /*------------------Actionneurs------------------*/

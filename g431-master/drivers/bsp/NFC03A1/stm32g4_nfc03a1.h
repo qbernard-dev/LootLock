@@ -43,8 +43,8 @@
 //#define RFTRANS_95HF_IRQ_HANDLER        EXTI15_10_IRQHandler
 #define IRQOUT_RFTRANS_95HF_PORT		GPIOA
 #define IRQOUT_RFTRANS_95HF_PIN			GPIO_PIN_10
-#define IRQIN_RFTRANS_GPIO_PORT			GPIOA
-#define IRQIN_RFTRANS_95HF_PIN			GPIO_PIN_9
+#define IRQIN_RFTRANS_GPIO_PORT			GPIOB
+#define IRQIN_RFTRANS_95HF_PIN			GPIO_PIN_5
 
 #define	RFTRANS_95HF_IRQIN_HIGH()		HAL_GPIO_WritePin(IRQIN_RFTRANS_GPIO_PORT, IRQIN_RFTRANS_95HF_PIN, 1)
 #define	RFTRANS_95HF_IRQIN_LOW()		HAL_GPIO_WritePin(IRQIN_RFTRANS_GPIO_PORT, IRQIN_RFTRANS_95HF_PIN, 0)
@@ -195,7 +195,7 @@ void RFTRANS_95HF_EXTI_Callback(uint8_t GPIO_Pin);
 void drvInt_Enable_Reply_IRQ(void);
 void drvInt_Enable_RFEvent_IRQ(void);
 void drvInt_Disable_95HF_IRQ(void);
-
+bool BSP_NFC03A1_read(ISO14443A_CARD *infos);
 /* Exported functions ------------------------------------------------------- */
 void HAL_Delay_Us(uint16_t delay);
 
