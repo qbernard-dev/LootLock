@@ -1,0 +1,8 @@
+../drivers/bsp/stm32g4_sys.c:44:6:BSP_SYS_set_std_usart	4	static
+../drivers/bsp/stm32g4_sys.c:118:6:BSP_SYS_HSI48_Init	64	static
+../drivers/bsp/stm32g4_sys.c:137:5:_read	24	static
+../drivers/bsp/stm32g4_sys.c:169:5:_write	16	static
+../drivers/bsp/stm32g4_sys.c:208:6:Error_Handler	0	static,ignoring_inline_asm
+../drivers/bsp/stm32g4_sys.c:76:6:SystemClock_Config	88	static
+../drivers/bsp/stm32g4_sys.c:55:6:HAL_MspInit	16	static
+../drivers/bsp/stm32g4_sys.c:234:10:dump_printf	272	static

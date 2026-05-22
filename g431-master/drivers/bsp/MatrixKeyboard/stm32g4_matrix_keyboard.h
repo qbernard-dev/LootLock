@@ -20,11 +20,11 @@
 	// pins : 	GPIO_PIN_x (x from 0 to 15) 	|	MCP23S17_PIN_x (x from 0 to 7)
 #define PORT_INPUT_0 	GPIOA
 #define PORT_INPUT_1 	GPIOA
-#define PORT_INPUT_2 	GPIOA
+#define PORT_INPUT_2 	GPIOB
 #define PORT_INPUT_3 	GPIOB
 #define	PIN_INPUT_0		GPIO_PIN_9
-#define	PIN_INPUT_1		GPIO_PIN_10
-#define	PIN_INPUT_2		GPIO_PIN_12
+#define	PIN_INPUT_1		GPIO_PIN_11
+#define	PIN_INPUT_2		GPIO_PIN_3
 #define	PIN_INPUT_3		GPIO_PIN_0
 
 #define PORT_OUTPUT_0 	GPIOB

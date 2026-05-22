@@ -1,0 +1,10 @@
+../drivers/bsp/MCP23017/stm32g4_mcp23017.c:488:26:MCP23017_initIc	3
+../drivers/bsp/MCP23017/stm32g4_mcp23017.c:181:6:MCP23017_init	2
+../drivers/bsp/MCP23017/stm32g4_mcp23017.c:197:15:MCP23017_add	4
+../drivers/bsp/MCP23017/stm32g4_mcp23017.c:228:6:MCP23017_setIO	6
+../drivers/bsp/MCP23017/stm32g4_mcp23017.c:272:6:MCP23017_getIO	5
+../drivers/bsp/MCP23017/stm32g4_mcp23017.c:309:6:MCP23017_setGPIO	7
+../drivers/bsp/MCP23017/stm32g4_mcp23017.c:358:6:MCP23017_getGPIO	5
+../drivers/bsp/MCP23017/stm32g4_mcp23017.c:398:6:MCP23017_setPullUp	7
+../drivers/bsp/MCP23017/stm32g4_mcp23017.c:448:6:MCP23017_getPullUp	5
+../drivers/bsp/MCP23017/stm32g4_mcp23017.c:538:6:MCP23017_demo	2

@@ -103,6 +103,7 @@ void BSP_NFC03A1_demo(void)
 				printf("\n");
 				break;}
 			default:
+				//printf("default\n");
 				break;
 		}
 	}
@@ -193,6 +194,25 @@ void drvInt_Disable_95HF_IRQ(void)
   RF_DataExpected = false;
   uDataReady = false;
   BSP_EXTIT_disable(BSP_EXTIT_gpiopin_to_pin_number(IRQOUT_RFTRANS_95HF_PIN));
+}
+
+
+bool BSP_NFC03A1_read(ISO14443A_CARD *infos)
+{
+
+	uint8_t tag;
+
+	tag = ConfigManager_TagHunting(TRACK_ALL);
+	switch(tag)
+	{
+		case TRACK_NFCTYPE4A:{
+			BSP_NFC03A1_get_ISO14443A_infos(infos);
+			return true;
+			break;}
+		default:
+			return false;
+			break;
+	}
 }
 
 #endif

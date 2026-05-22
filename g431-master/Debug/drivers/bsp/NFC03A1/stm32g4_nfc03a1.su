@@ -1,0 +1,8 @@
+../drivers/bsp/NFC03A1/stm32g4_nfc03a1.c:65:6:BSP_NFC03A1_Init	16	static
+../drivers/bsp/NFC03A1/stm32g4_nfc03a1.c:137:6:BSP_NFC03A1_get_ISO14443A_infos	8	static
+../drivers/bsp/NFC03A1/stm32g4_nfc03a1.c:85:6:BSP_NFC03A1_demo	152	static
+../drivers/bsp/NFC03A1/stm32g4_nfc03a1.c:152:6:RFTRANS_95HF_EXTI_Callback	8	static
+../drivers/bsp/NFC03A1/stm32g4_nfc03a1.c:170:6:drvInt_Enable_Reply_IRQ	8	static
+../drivers/bsp/NFC03A1/stm32g4_nfc03a1.c:181:6:drvInt_Enable_RFEvent_IRQ	8	static
+../drivers/bsp/NFC03A1/stm32g4_nfc03a1.c:192:6:drvInt_Disable_95HF_IRQ	8	static
+../drivers/bsp/NFC03A1/stm32g4_nfc03a1.c:200:6:BSP_NFC03A1_read	8	static
