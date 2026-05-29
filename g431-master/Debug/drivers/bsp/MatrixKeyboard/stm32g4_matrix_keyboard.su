@@ -12,4 +12,4 @@
 ../drivers/bsp/MatrixKeyboard/stm32g4_matrix_keyboard.c:206:6:BSP_MATRIX_KEYBOARD_press_and_release_events	24	static
 ../drivers/bsp/MatrixKeyboard/stm32g4_matrix_keyboard.c:101:6:BSP_MATRIX_KEYBOARD_demo_process_main	16	static
 ../drivers/bsp/MatrixKeyboard/stm32g4_matrix_keyboard.c:230:6:MATRIX_KEYBOARD_get_key	8	static
-../drivers/bsp/MatrixKeyboard/stm32g4_matrix_keyboard.c:426:6:BSP_MATRIX_KEYBOARD_process_main	16	static
+../drivers/bsp/MatrixKeyboard/stm32g4_matrix_keyboard.c:432:6:BSP_MATRIX_KEYBOARD_process_main	16	static

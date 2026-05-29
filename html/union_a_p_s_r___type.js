@@ -1,0 +1,26 @@
+var union_a_p_s_r___type =
+[
+    [ "_reserved0", "group___c_m_s_i_s__core___debug_functions.html#gac8a6a13838a897c8d0b8bc991bbaf7c1", null ],
+    [ "_reserved1", "group___c_m_s_i_s__core___debug_functions.html#ga959a73d8faee56599b7e792a7c5a2d16", null ],
+    [ "b", "group___c_m_s_i_s__core___debug_functions.html#gad341f2767a30a266d1f4bff6f8821743", null ],
+    [ "b", "group___c_m_s_i_s___core___sys_tick_functions.html#ga6bf6350b33e3b4b53fa58ed4e94957b6", null ],
+    [ "b", "group___c_m_s_i_s__core___debug_functions.html#ga9089cbef9d432dc033a10cd1851f3fc2", null ],
+    [ "b", "group___c_m_s_i_s___core___sys_tick_functions.html#ga990c0f99132b10e81b656c8313129bfd", null ],
+    [ "b", "group___c_m_s_i_s___core___sys_tick_functions.html#ga5ac55cbf691a75328d8ae5867bd40a57", null ],
+    [ "b", "group___c_m_s_i_s___core___sys_tick_functions.html#ga4af1401ee113526b2a06e8faf3476dd9", null ],
+    [ "b", "group___c_m_s_i_s___core___sys_tick_functions.html#ga2c42168f2e992585c0f33e347c01be20", null ],
+    [ "b", "group___c_m_s_i_s__core___debug_functions.html#ga5ade1eb89e377b846b9d53f42e40c480", null ],
+    [ "b", "group___c_m_s_i_s__core___debug_functions.html#gaa179ec4be362650856cb93202f59bba5", null ],
+    [ "b", "group___c_m_s_i_s__core___debug_functions.html#ga608326c7961421d62e11452bae57c4bb", null ],
+    [ "b", "group___c_m_s_i_s__core___debug_functions.html#gad8c2455b51d3bb162e055f1be9f1dfd2", null ],
+    [ "b", "group___c_m_s_i_s__core___debug_functions.html#ga8f4463f6639fe87590d7400df8a1b83d", null ],
+    [ "b", "group___c_m_s_i_s___core___sys_tick_functions.html#ga3921e4e36e4e10e77fffec1022cc4955", null ],
+    [ "b", "group___c_m_s_i_s__core___debug_functions.html#ga528a96c14b5fbada62b02689534bbb06", null ],
+    [ "C", "group___c_m_s_i_s__core___debug_functions.html#ga7a1caf92f32fe9ebd8d1fe89b06c7776", null ],
+    [ "GE", "group___c_m_s_i_s__core___debug_functions.html#gaa91800ec6e90e457c7a1acd1f2e17099", null ],
+    [ "N", "group___c_m_s_i_s__core___debug_functions.html#gabae0610bc2a97bbf7f689e953e0b451f", null ],
+    [ "Q", "group___c_m_s_i_s__core___debug_functions.html#ga65f27ddc4f7e09c14ce7c5211b2e000a", null ],
+    [ "V", "group___c_m_s_i_s__core___debug_functions.html#gacd4a2b64faee91e4a9eef300667fa222", null ],
+    [ "w", "group___c_m_s_i_s__core___debug_functions.html#gad0fb62e7a08e70fc5e0a76b67809f84b", null ],
+    [ "Z", "group___c_m_s_i_s__core___debug_functions.html#ga5ae954cbd9986cd64625d7fa00943c8e", null ]
+];

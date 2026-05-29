@@ -423,6 +423,12 @@ static bool keyboard_pin_read(uint32_t port, uint16_t pin)
 	return ret;
 }
 
+/**
+ * @brief lecture du dernier character relaché
+ *
+ * @return la touche qui viens d'être relaché
+ */
+
 char BSP_MATRIX_KEYBOARD_process_main (void)
 {
 	typedef enum
@@ -447,7 +453,7 @@ char BSP_MATRIX_KEYBOARD_process_main (void)
 			//BSP_MATRIX_KEYBOARD_init(custom_keyboard_12_touchs);	//Initialisation du clavier avec un clavier personnalisÃ© 12 touches
 
 			//pensez Ã  renseigner les bons ports dans matrix_keyboard.h en fonction de votre hardware.
-			printf("To run this demo, you should plug a matrix keyboard on the right ports. See matrix_keyboard.h\n");
+			//printf("To run this demo, you should plug a matrix keyboard on the right ports. See matrix_keyboard.h\n");
 			state = RUN;
 			break;
 		case RUN:
@@ -462,11 +468,11 @@ char BSP_MATRIX_KEYBOARD_process_main (void)
 					case NO_KEY:
 						break;
 					case MANY_KEYS:
-						printf("Many keys pressed : %lx\n", all_touch_pressed);
+						//printf("Many keys pressed : %lx\n", all_touch_pressed);
 						break;
 					default:
 						key_pressed = press_key_event;
-						printf("%c pressed\n", press_key_event);
+						//printf("%c pressed\n", press_key_event);
 						break;
 				}
 				switch(release_key_event)
@@ -474,10 +480,10 @@ char BSP_MATRIX_KEYBOARD_process_main (void)
 					case NO_KEY:
 						break;
 					case MANY_KEYS:
-						printf("Many keys released : %lx\n", all_touch_pressed);
+						//printf("Many keys released : %lx\n", all_touch_pressed);
 						break;
 					default:
-						printf("%c released\n", release_key_event);
+						//printf("%c released\n", release_key_event);
 						break;
 				}
 			}
