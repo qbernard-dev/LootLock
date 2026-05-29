@@ -77,6 +77,7 @@ void BSP_NFC03A1_Init(DeviceMode_t dm)
 	#endif /*  */
 
 	ConfigManager_HWInit();
+	RFTRANS_95HF_NSS_HIGH();
 
 	initialized = true;
 }
@@ -196,7 +197,12 @@ void drvInt_Disable_95HF_IRQ(void)
   BSP_EXTIT_disable(BSP_EXTIT_gpiopin_to_pin_number(IRQOUT_RFTRANS_95HF_PIN));
 }
 
-
+/**
+ * @brief récupère les infos de la carte nfc si il y en a une de lue
+ *
+ * @param infos
+ * @return true si une carte est lue et false sinon
+ */
 bool BSP_NFC03A1_read(ISO14443A_CARD *infos)
 {
 
@@ -213,6 +219,7 @@ bool BSP_NFC03A1_read(ISO14443A_CARD *infos)
 			return false;
 			break;
 	}
+
 }
 
 #endif

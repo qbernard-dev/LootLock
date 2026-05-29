@@ -20,6 +20,7 @@
 void HC05_set_echo_for_AT_mode(void)
 {
 	BSP_UART_init(UART1_ID, 38400);		//vitesse nécessaire pour la configuration du HC-05 en mode AT
+	//BSP_UART_init(UART1_ID, 115200);		//vitesse nécessaire pour la configuration du HC-05 en mode AT
 	BSP_UART_init(UART2_ID, 115200);
 	uint8_t c;
 	volatile bool config_mode = true;
