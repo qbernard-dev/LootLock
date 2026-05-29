@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LootLock - Dashboard</title>
+    <style>
+        :root {
+            --primary: #007AFF;
+            --success: #34C759;
+            --danger: #FF3B30;
+            --warning: #FFcc00;
+            --bg: #1E1E1E; 
+            --surface: #2D2D2D;
+            --text-main: #FFFFFF;
+            --text-muted: #A0A0A5;
+            --border: #404040;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            height: 100vh;
+            box-sizing: border-box;
+            gap: 20px;
+        }
+
+        .panel {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+        }
+
+        .left-panel { flex: 1; min-width: 350px; max-width: 400px; }
+        .right-panel { flex: 2; display: flex; flex-direction: column; }
+
+        h1, h2 { margin-top: 0; color: var(--text-main); }
+        h1 { font-size: 22px; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 20px;}
+        h2 { font-size: 16px; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;}
+
+        /* Boutons et Formulaires */
+        .btn {
+            width: 100%; padding: 15px; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px;
+        }
+        .btn-connect { background-color: var(--primary); color: white; margin-bottom: 20px; }
+        .btn-connect.active { background-color: var(--danger); }
+        
+        .form-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; background: #252525; padding: 15px; border-radius: 8px;}
+        input {
+            padding: 10px; border-radius: 6px; border: 1px solid var(--border);
+            background: #1E1E1E; color: white; font-family: monospace; font-size: 14px;
+        }
+        input:focus { outline: 1px solid var(--primary); }
+        .btn-add { background: var(--success); color: white; }
+
+        /* Liste Base de données */
+        .user-list { list-style: none; padding: 0; overflow-y: auto; flex: 1; margin: 0;}
+        .user-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px; background: #383838; margin-bottom: 8px; border-radius: 6px; font-size: 14px;
+        }
+        .badge-id { font-family: monospace; color: var(--warning); letter-spacing: 1px; }
+        .btn-delete { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 16px; font-weight: bold; }
+        .tag-pin { font-size: 10px; background: #555; padding: 2px 6px; border-radius: 4px; color: white; margin-left: 5px;}
+        .tag-nfc { font-size: 10px; background: var(--primary); padding: 2px 6px; border-radius: 4px; color: white; margin-left: 5px;}
+
+        /* Historique Visuel */
+        .history-container {
+            flex: 2; 
+            background: #252525; 
+            border-radius: 8px; 
+            overflow-y: auto; 
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+        .history-table { width: 100%; border-collapse: collapse; }
+        .history-table th { 
+            text-align: left; padding: 12px; background: #1E1E1E; 
+            color: var(--text-muted); font-size: 13px; position: sticky; top: 0;
+        }
+        .history-table td { padding: 12px; border-bottom: 1px solid #383838; font-size: 14px; }
+        .status-ok { color: var(--success); font-weight: bold; }
+        .status-ko { color: var(--danger); font-weight: bold; }
+        .history-time { color: var(--text-muted); font-size: 12px; }
+
+        /* Terminal Historique Brut */
+        .terminal {
+            flex: 1; background: #000; color: #0f0; font-family: 'Courier New', Courier, monospace;
+            padding: 10px; border-radius: 8px; overflow-y: auto; font-size: 12px; line-height: 1.4;
+            border: 1px solid var(--border); max-height: 150px;
+        }
+        .log-time { color: #888; }
+        .log-rx { color: #0ff; } 
+        .log-tx { color: #f0f; } 
+        .log-sys { color: #ff0; }
+        .log-brut { color: #555; }
+    </style>
+</head>
+<body>
+
+    <div class="panel left-panel">
+        <h1>🔒 LootLock Config</h1>
+        
+        <button id="btnConnect" class="btn btn-connect">OUVRIR LE PORT COM</button>
+        
+        <div class="form-group">
+            <label style="font-size: 12px; color: var(--text-muted);">Ajouter un Badge NFC</label>
+            <input type="text" id="inputName" placeholder="Nom" autocomplete="off">
+            <input type="text" id="inputId" placeholder="UID NFC" autocomplete="off">
+            <button class="btn btn-add" onclick="addNfcUser()">ENREGISTRER LE BADGE</button>
+        </div>
+
+        <h2>Base de données d'accès</h2>
+        <ul class="user-list" id="userList"></ul>
+    </div>
+
+    <div class="panel right-panel">
+        <h1>📅 Registre des Passages</h1>
+        <div class="history-container">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Date & Heure</th>
+                        <th>Identifiant lu</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody id="historyBody">
+                    </tbody>
+            </table>
+        </div>
+
+        <h2 style="margin-top: 10px;">📡 Terminal</h2>
+        <div class="terminal" id="terminal">
+            <span class="log-sys">LootLock OS</span><br>
+        </div>
+    </div>
+
+    <script>
+        // base en dur pour les codes PIN 
+        const pinUsers = [
+            { name: "Maison", id: "1234" },
+        ];
+
+        // base badges NFC
+        let nfcUsers = JSON.parse(localStorage.getItem('lootlock_nfc_db')) || [];
+        
+        // historique des passages
+        let historyLogs = JSON.parse(localStorage.getItem('lootlock_history')) || [];
+
+        // Afficage de la base de données d'accès
+        function renderUsers() {
+            const list = document.getElementById('userList');
+            list.innerHTML = '';
+            
+            pinUsers.forEach((u) => {
+                list.innerHTML += `
+                    <li class="user-item">
+                        <span><strong>${u.name}</strong> <span class="tag-pin">PIN</span><br><span class="badge-id">${u.id}</span></span>
+                        <span style="color: var(--text-muted); font-size: 12px;">FIXE</span>
+                    </li>
+                `;
+            });
+
+            nfcUsers.forEach((u, i) => {
+                list.innerHTML += `
+                    <li class="user-item">
+                        <span><strong>${u.name}</strong> <span class="tag-nfc">NFC</span><br><span class="badge-id">${u.id}</span></span>
+                        <button class="btn-delete" onclick="deleteNfcUser(${i})" title="Supprimer le badge">✖</button>
+                    </li>
+                `;
+            });
+            
+            localStorage.setItem('lootlock_nfc_db', JSON.stringify(nfcUsers));
+        }
+
+        function addNfcUser() {
+            const name = document.getElementById('inputName').value.trim();
+            const id = document.getElementById('inputId').value.trim().toUpperCase();
+            
+            if (!name || !id) { alert("Veuillez remplir le Nom et l'UID NFC."); return; }
+            if (nfcUsers.find(u => u.id === id)) { alert("Ce badge NFC existe déjà !"); return; }
+            
+            nfcUsers.push({ name, id });
+            document.getElementById('inputName').value = '';
+            document.getElementById('inputId').value = '';
+            renderUsers();
+            sysLog(`Badge NFC ajouté : ${name}`);
+        }
+
+        function deleteNfcUser(index) {
+            nfcUsers.splice(index, 1);
+            renderUsers();
+        }
+
+        function renderHistory() {
+            const tbody = document.getElementById('historyBody');
+            tbody.innerHTML = '';
+            
+            [...historyLogs].reverse().forEach(log => {
+                const statusClass = log.granted ? 'status-ok' : 'status-ko';
+                const statusText = log.granted ? 'AUTORISÉ' : 'REFUSÉ';
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="history-time">${log.time}</td>
+                        <td><strong>${log.name}</strong></td>
+                        <td class="${statusClass}">${statusText}</td>
+                    </tr>
+                `;
+            });
+            localStorage.setItem('lootlock_history', JSON.stringify(historyLogs));
+        }
+
+        function addHistoryEntry(name, isGranted) {
+            const now = new Date();
+            const timeStr = now.toLocaleDateString('fr-FR') + ' - ' + now.toLocaleTimeString('fr-FR');
+            historyLogs.push({ time: timeStr, name: name, granted: isGranted });
+            if (historyLogs.length > 50) historyLogs.shift(); // Garde les 50 derniers passages
+            renderHistory();
+        }
+
+        renderUsers();
+        renderHistory();
+
+        // gestion du terminal de logs
+        const terminal = document.getElementById('terminal');
+        function logMsg(htmlContent) {
+            const time = new Date().toLocaleTimeString('fr-FR', { hour12: false });
+            terminal.innerHTML += `<span class="log-time">[${time}]</span> ${htmlContent}<br>`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        function sysLog(msg) { logMsg(`<span class="log-sys">${msg}</span>`); }
+        function rxLog(msg) { logMsg(`<span class="log-rx">↓ RX: ${msg}</span>`); }
+        function txLog(msg) { logMsg(`<span class="log-tx">↑ TX: ${msg}</span>`); }
+
+        // bluetooth
+        let port;
+        let reader;
+        let writer;
+        let keepReading = false;
+        let rxBuffer = new Uint8Array(0);
+
+        const btnConnect = document.getElementById('btnConnect');
+
+        btnConnect.addEventListener('click', async () => {
+            if (port) { await disconnectSerial(); return; }
+            await connectSerial();
+        });
+
+        async function connectSerial() {
+            if (!navigator.serial) { alert("Navigateur non compatible. Utilisez Chrome ou Edge."); return; }
+            try {
+                port = await navigator.serial.requestPort();
+                await port.open({ baudRate: 9600 });
+                btnConnect.classList.add('active');
+                btnConnect.innerText = "FERMER LE PORT COM";
+                sysLog("Port COM Ouvert. Écoute des trames...");
+                keepReading = true;
+                readLoop(); 
+            } catch (e) {
+                if(e.name !== "NotFoundError") sysLog(`Erreur : ${e.message}`);
+            }
+        }
+
+        async function disconnectSerial() {
+            keepReading = false;
+            if (reader) await reader.cancel();
+            if (port) await port.close();
+            port = null;
+            btnConnect.classList.remove('active');
+            btnConnect.innerText = "OUVRIR LE PORT COM";
+            sysLog("Port COM Fermé.");
+        }
+
+        async function readLoop() {
+            reader = port.readable.getReader();
+            try {
+                while (keepReading) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    
+                    const rawHex = Array.from(value).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
+                    logMsg(`<span class="log-brut">[BRUT] ${rawHex}</span>`);
+
+                    const newBuffer = new Uint8Array(rxBuffer.length + value.length);
+                    newBuffer.set(rxBuffer);
+                    newBuffer.set(value, rxBuffer.length);
+                    rxBuffer = newBuffer;
+
+                    processBuffer();
+                }
+            } catch (e) {
+                sysLog(`Déconnexion/Erreur de lecture : ${e.message}`);
+                disconnectSerial();
+            } finally {
+                reader.releaseLock();
+            }
+        }
+
+        function processBuffer() {
+            const startIndex = rxBuffer.indexOf(0xBA);
+            if (startIndex === -1) { rxBuffer = new Uint8Array(0); return; }
+            if (startIndex > 0) { rxBuffer = rxBuffer.slice(startIndex); }
+
+            const endIndex = rxBuffer.indexOf(0xFA);
+            if (endIndex !== -1) {
+                const fullFrame = rxBuffer.slice(0, endIndex + 1);
+                const payload = fullFrame.slice(2, fullFrame.length - 1);
+                handleValidFrame(payload); 
+                rxBuffer = rxBuffer.slice(endIndex + 1);
+                if (rxBuffer.length > 0) { processBuffer(); }
+            }
+        }
+
+        // Traitement de la trame reçue
+        function handleValidFrame(payload) {
+            if(payload.length === 0) return;
+
+            const type = payload[0];
+            const dataBytes = payload.slice(1);
+            
+            let idReceived = "";
+            let typeStr = "";
+            let user = null; 
+
+            if (type === 0x00) {
+                typeStr = "CODE";
+                idReceived = new TextDecoder().decode(dataBytes);
+                user = pinUsers.find(u => u.id === idReceived);
+            } 
+            else if (type === 0x01) {
+                typeStr = "NFC";
+                idReceived = Array.from(dataBytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
+                user = nfcUsers.find(u => u.id === idReceived);
+            } 
+            else {
+                typeStr = "INCONNU";
+                idReceived = Array.from(dataBytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
+            }
+
+            rxLog(`Trame [${typeStr}] complète -> Valeur: ${idReceived}`);
+
+            if (user) {
+                addHistoryEntry(user.name, true);
+                sendResponseFrame(0x00, user.name); 
+            } else {
+                addHistoryEntry(`Inconnu (${typeStr}: ${idReceived})`, false);
+                sendResponseFrame(0x01, "INCONNU"); 
+            }
+        }
+
+        // Envoi d'une trame
+        async function sendResponseFrame(statusByte, messageStr) {
+            if (!port || !port.writable) return;
+
+            const msgBytes = new TextEncoder().encode(messageStr);
+            const payloadLength = 1 + msgBytes.length; 
+            
+            const frame = new Uint8Array(payloadLength + 3);
+            frame[0] = 0xBA;              
+            frame[1] = payloadLength;     
+            frame[2] = statusByte;        
+            frame.set(msgBytes, 3);       
+            frame[frame.length - 1] = 0xFA; 
+
+            writer = port.writable.getWriter();
+            await writer.write(frame);
+            writer.releaseLock();
+
+            const hexFrame = Array.from(frame).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
+            txLog(`Trame de réponse : ${hexFrame}`);
+        }
+    </script>
+</body>
+</html>
