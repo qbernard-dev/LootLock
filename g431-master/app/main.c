@@ -158,7 +158,9 @@ void state_machine(void)
 		case STATE_WAIT:{
 			if (entry){
 				write_serrure(false);
+				ILI9341_Fill(ILI9341_COLOR_WHITE);
 				ILI9341_Puts(25,200, "attente", &Font_7x10, ILI9341_COLOR_BROWN, ILI9341_COLOR_WHITE);
+				write_serrure(false);
 				BSP_NFC03A1_Init(PCD);
 
 
@@ -241,6 +243,8 @@ void state_machine(void)
 
 
 				ILI9341_Puts(25,200, "attente retour ble ", &Font_7x10, ILI9341_COLOR_BROWN, ILI9341_COLOR_WHITE);
+				write_serrure(false);
+
 			}
 			uint8_t rx[64];
 
@@ -323,6 +327,7 @@ void state_machine(void)
 			if (entry){
 
 				write_serrure(true);
+				ILI9341_Fill(ILI9341_COLOR_WHITE);
 				ILI9341_Puts(25,200, "ouvert", &Font_7x10, ILI9341_COLOR_BROWN, ILI9341_COLOR_WHITE);
 			}
 
@@ -336,8 +341,10 @@ void state_machine(void)
 		{
 			if (entry){
 
-
+				ILI9341_Fill(ILI9341_COLOR_WHITE);
 				ILI9341_Puts(25,200, "erreur ", &Font_7x10, ILI9341_COLOR_BROWN, ILI9341_COLOR_WHITE);
+				write_serrure(false);
+
 			}
 			HAL_Delay(WAIT_DELAY);
 			state=STATE_WAIT;
