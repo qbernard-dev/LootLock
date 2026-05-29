@@ -23,7 +23,7 @@
 		#define DEFAULT_STATE 	(false)
 		#define CONFIG_PULL	GPIO_PULLDOWN
 	#else
-		#error "Vous devez définir CONFIG_PULL_UP ou CONFIG_PULL_DOWN"
+		#error "Vous devez dÃ©finir CONFIG_PULL_UP ou CONFIG_PULL_DOWN"
 	#endif
 #endif
 
@@ -36,14 +36,14 @@ static bool keyboard_pin_read(uint32_t port, uint16_t pin);
 
 
 
-//Fonctions privées
+//Fonctions privÃ©es
 static char MATRIX_KEYBOARD_touch_to_key(uint32_t touchs_pressed);
 static uint32_t MATRIX_KEYBOARD_read_all_touchs(void);
 static uint8_t  MATRIX_KEYBOARD_get_inputs(void);
 char MATRIX_KEYBOARD_get_key(void);
 static void MATRIX_KEYBOARD_write_bit_output(uint8_t bit);
 
-//Disposition des touches sur le clavier. (attention, ne correspond pas forcément à la disposition physique dans le bon ordre !)
+//Disposition des touches sur le clavier. (attention, ne correspond pas forcÃ©ment Ã  la disposition physique dans le bon ordre !)
 const char default_keyboard_keys[16] = {
 								'D','#','0','*',
 								'C','9','8','7',
@@ -71,7 +71,7 @@ static volatile uint32_t t = 0;
 
 
 /**
-@brief	Initialise le module keyboard. Les ports concernés sont configurés en entrée.
+@brief	Initialise le module keyboard. Les ports concernÃ©s sont configurÃ©s en entrÃ©e.
 */
 void BSP_MATRIX_KEYBOARD_init(const char * new_keyboard_keys)
 {
@@ -95,8 +95,8 @@ void BSP_MATRIX_KEYBOARD_init(const char * new_keyboard_keys)
 
 
 /**
- * @brief 	Cette fonction présente de façon simple l'utilisation de ce module logiciel.
- * @note	Cette fonction doit être appelée dans la boucle de tâche de fond.
+ * @brief 	Cette fonction prÃ©sente de faÃ§on simple l'utilisation de ce module logiciel.
+ * @note	Cette fonction doit Ãªtre appelÃ©e dans la boucle de tÃ¢che de fond.
  */
 void BSP_MATRIX_KEYBOARD_demo_process_main (void)
 {
@@ -115,21 +115,21 @@ void BSP_MATRIX_KEYBOARD_demo_process_main (void)
 		case INIT:
 			BSP_systick_add_callback_function(BSP_MATRIX_KEYBOARD_demo_process_1ms);
 
-			//A modifier en fonction du clavier utilisé : par défaut, personnalisé ou personnalisé 12 touches
-			//BSP_MATRIX_KEYBOARD_init(NULL);						//Initialisation du clavier avec le clavier par défaut
-			BSP_MATRIX_KEYBOARD_init(default_keyboard_keys);			//Initialisation du clavier avec un clavier personnalisé
-			//BSP_MATRIX_KEYBOARD_init(custom_keyboard_12_touchs);	//Initialisation du clavier avec un clavier personnalisé 12 touches
+			//A modifier en fonction du clavier utilisÃ© : par dÃ©faut, personnalisÃ© ou personnalisÃ© 12 touches
+			//BSP_MATRIX_KEYBOARD_init(NULL);						//Initialisation du clavier avec le clavier par dÃ©faut
+			BSP_MATRIX_KEYBOARD_init(default_keyboard_keys);			//Initialisation du clavier avec un clavier personnalisÃ©
+			//BSP_MATRIX_KEYBOARD_init(custom_keyboard_12_touchs);	//Initialisation du clavier avec un clavier personnalisÃ© 12 touches
 
-			//pensez à renseigner les bons ports dans matrix_keyboard.h en fonction de votre hardware.
+			//pensez Ã  renseigner les bons ports dans matrix_keyboard.h en fonction de votre hardware.
 			printf("To run this demo, you should plug a matrix keyboard on the right ports. See matrix_keyboard.h\n");
 			state = RUN;
 			break;
 		case RUN:
 
-			//pour éviter les rebonds, il est important de lire le clavier toutes les 10ms environ.
+			//pour Ã©viter les rebonds, il est important de lire le clavier toutes les 10ms environ.
 			if(!t)	//A chaque fois que t vaut 0 (toutes les 10ms)...
 			{
-				t = 10;							//[ms] On recharge le chronomètre t pour 10ms...
+				t = 10;							//[ms] On recharge le chronomÃ¨tre t pour 10ms...
 				BSP_MATRIX_KEYBOARD_press_and_release_events(&press_key_event, &release_key_event, &all_touch_pressed);
 				switch(press_key_event)
 				{
@@ -161,17 +161,17 @@ void BSP_MATRIX_KEYBOARD_demo_process_main (void)
 }
 
 
-//Cette fonction doit être appelée toutes les ms.
+//Cette fonction doit Ãªtre appelÃ©e toutes les ms.
 void BSP_MATRIX_KEYBOARD_demo_process_1ms(void)
 {
-	if(t)		//Si le chronomètre est "chargé", on décompte... (comme un minuteur de cuisine !)
+	if(t)		//Si le chronomÃ¨tre est "chargÃ©", on dÃ©compte... (comme un minuteur de cuisine !)
 		t--;
 }
 
 
 /**
-@brief	Vérifie qu'il y a appui sur une touche ou non.
-@return	true si une touche est appuyée, false sinon.
+@brief	VÃ©rifie qu'il y a appui sur une touche ou non.
+@return	true si une touche est appuyÃ©e, false sinon.
 */
 bool BSP_MATRIX_KEYBOARD_is_pressed(void)
 {
@@ -181,7 +181,7 @@ bool BSP_MATRIX_KEYBOARD_is_pressed(void)
 
 	MATRIX_KEYBOARD_write_bit_output(!DEFAULT_STATE);
 
-	//Si l'un des ports n'est pas dans l'état par défaut, c'est qu'une touche est pressée.
+	//Si l'un des ports n'est pas dans l'Ã©tat par dÃ©faut, c'est qu'une touche est pressÃ©e.
 	ret = (	(keyboard_pin_read((uint32_t)PORT_INPUT_0,PIN_INPUT_0) != DEFAULT_STATE) ||
 			(keyboard_pin_read((uint32_t)PORT_INPUT_1,PIN_INPUT_1) != DEFAULT_STATE) ||
 			(keyboard_pin_read((uint32_t)PORT_INPUT_2,PIN_INPUT_2) != DEFAULT_STATE) ||
@@ -194,14 +194,14 @@ bool BSP_MATRIX_KEYBOARD_is_pressed(void)
 
 
 /**
- * @brief	Cette fonction met à jour press_event, release_event et all_touchs_pressed avec les informations reçues et traitées.
- * 			Il est recommandé d'appeler cette fonction toutes les 10ms. (à des fins d'anti rebond logiciel, et pour ne louper aucun évènement).
- * @param 	press_event: va prendre soit la valeur NO_KEY, soit MANY_KEYS, soit le caractère appuyé sur le clavier (voir fonction MATRIX_KEYBOARD_touch_to_key())
- * @param 	release_event: va prendre soit la valeur NO_KEY, soit MANY_KEYS, soit le caractère relaché sur le clavier (voir fonction MATRIX_KEYBOARD_touch_to_key())
- * @param 	all_touchs_pressed: Permet de récupérer l'état de l'ensemble du clavier (1 bit par touche)
- * @pre 	KEYBOARD_init() doit avoir été appelée avant.
- * @post	/!\ si deux évènement d'appuis au moins sont simultanés, press_event reçoit l'information MANY_KEYS
- * 			si deux évènement de relachement au moins sont simultanés, release_event reçoit l'information MANY_KEYS /!\
+ * @brief	Cette fonction met Ã  jour press_event, release_event et all_touchs_pressed avec les informations reÃ§ues et traitÃ©es.
+ * 			Il est recommandÃ© d'appeler cette fonction toutes les 10ms. (Ã  des fins d'anti rebond logiciel, et pour ne louper aucun Ã©vÃ¨nement).
+ * @param 	press_event: va prendre soit la valeur NO_KEY, soit MANY_KEYS, soit le caractÃ¨re appuyÃ© sur le clavier (voir fonction MATRIX_KEYBOARD_touch_to_key())
+ * @param 	release_event: va prendre soit la valeur NO_KEY, soit MANY_KEYS, soit le caractÃ¨re relachÃ© sur le clavier (voir fonction MATRIX_KEYBOARD_touch_to_key())
+ * @param 	all_touchs_pressed: Permet de rÃ©cupÃ©rer l'Ã©tat de l'ensemble du clavier (1 bit par touche)
+ * @pre 	KEYBOARD_init() doit avoir Ã©tÃ© appelÃ©e avant.
+ * @post	/!\ si deux Ã©vÃ¨nement d'appuis au moins sont simultanÃ©s, press_event reÃ§oit l'information MANY_KEYS
+ * 			si deux Ã©vÃ¨nement de relachement au moins sont simultanÃ©s, release_event reÃ§oit l'information MANY_KEYS /!\
  */
 void BSP_MATRIX_KEYBOARD_press_and_release_events(char * press_event, char * release_event, uint32_t * all_touchs_pressed)
 {
@@ -222,10 +222,10 @@ void BSP_MATRIX_KEYBOARD_press_and_release_events(char * press_event, char * rel
 }
 
 /**
-@brief	Renvoi le code ASCII de la touche pressée. En correspondance avec le tableau de codes ASCII.
-@post	Cette fonction intègre un anti-rebond  TODO A bon ?
-@pre	Il est conseillé d'appeler cette fonction périodiquement (10ms par exemple)
-@return	Retourne le caractère ASCII si UNE touche est pressée. Sinon, renvoie 0.
+@brief	Renvoi le code ASCII de la touche pressÃ©e. En correspondance avec le tableau de codes ASCII.
+@post	Cette fonction intÃ¨gre un anti-rebond  TODO A bon ?
+@pre	Il est conseillÃ© d'appeler cette fonction pÃ©riodiquement (10ms par exemple)
+@return	Retourne le caractÃ¨re ASCII si UNE touche est pressÃ©e. Sinon, renvoie 0.
 */
 char MATRIX_KEYBOARD_get_key(void)
 {
@@ -237,9 +237,9 @@ char MATRIX_KEYBOARD_get_key(void)
 }
 
 /**
- * @brief Regarde si plusieur, 0 ou 1 seul touche(s) à/ont été touchée(s). Si 1 seul touche: elle renvoit la lettre ascii correspondante sur le clavier.
- * @param touchs_pressed: un chiffre qui, une fois écrit en binaire, indique quelle(s) touche(s) à /ont été touchée(s) (ex: 0000000000010000 = keyboard_keys[4] = 'C')
- * @return soit NO_KEY, soit MANY_KEYS, soit le caractère appuyé ou relaché sur le clavier
+ * @brief Regarde si plusieur, 0 ou 1 seul touche(s) Ã /ont Ã©tÃ© touchÃ©e(s). Si 1 seul touche: elle renvoit la lettre ascii correspondante sur le clavier.
+ * @param touchs_pressed: un chiffre qui, une fois Ã©crit en binaire, indique quelle(s) touche(s) Ã  /ont Ã©tÃ© touchÃ©e(s) (ex: 0000000000010000 = keyboard_keys[4] = 'C')
+ * @return soit NO_KEY, soit MANY_KEYS, soit le caractÃ¨re appuyÃ© ou relachÃ© sur le clavier
  */
 static char MATRIX_KEYBOARD_touch_to_key(uint32_t touchs_pressed)
 {
@@ -250,7 +250,7 @@ static char MATRIX_KEYBOARD_touch_to_key(uint32_t touchs_pressed)
 		return MANY_KEYS;
 	else
 	{
-		//touchs_pressed ne contient qu'un seul bit à 1
+		//touchs_pressed ne contient qu'un seul bit Ã  1
 		for(index = 0; index < 16; index++)
 		{
 			if(touchs_pressed == 1u<<index)
@@ -291,7 +291,7 @@ static uint32_t MATRIX_KEYBOARD_read_all_touchs(void)
 			default:
 				break;	//Ne doit pas se produire.
 		}
-		//Acquisition entrées.
+		//Acquisition entrÃ©es.
 		ret |= (uint32_t)(MATRIX_KEYBOARD_get_inputs()) << (4*i);
 	}
 	//printf("t%lx\n",ret);
@@ -299,8 +299,8 @@ static uint32_t MATRIX_KEYBOARD_read_all_touchs(void)
 }
 
 /**
-@brief  Cette fonction lit l'état des entrées.
-@return Retourne un entier contenant l'état des entrées.
+@brief  Cette fonction lit l'Ã©tat des entrÃ©es.
+@return Retourne un entier contenant l'Ã©tat des entrÃ©es.
 */
 static uint8_t  MATRIX_KEYBOARD_get_inputs(void)
 {
@@ -338,7 +338,7 @@ static char * warning_string = "you should clarify the parameters according to t
 
 static void keyboard_pin_set_output(uint32_t port, uint16_t pin)
 {
-	if(port <= MCP23S17_PORT_B && pin && ((pin&(pin-1))==0))	//on v�rifie que pin est bien une puissance de 2.
+	if(port <= MCP23S17_PORT_B && pin && ((pin&(pin-1))==0))	//on vï¿½rifie que pin est bien une puissance de 2.
 	{
 		if(!mcp23s17_initialized)
 		{
@@ -359,7 +359,7 @@ static void keyboard_pin_set_output(uint32_t port, uint16_t pin)
 
 static void keyboard_pin_set_input(uint32_t port, uint16_t pin)
 {
-	if(port <= MCP23S17_PORT_B && pin && ((pin&(pin-1))==0))	//on v�rifie que pin est bien une puissance de 2.
+	if(port <= MCP23S17_PORT_B && pin && ((pin&(pin-1))==0))	//on vï¿½rifie que pin est bien une puissance de 2.
 	{
 		if(!mcp23s17_initialized)
 		{
@@ -381,7 +381,7 @@ static void keyboard_pin_set_input(uint32_t port, uint16_t pin)
 
 static void keyboard_pin_write(uint32_t port, uint16_t pin, bool state)
 {
-	if(port <= MCP23S17_PORT_B && pin && ((pin&(pin-1))==0))	//on v�rifie que pin est bien une puissance de 2.
+	if(port <= MCP23S17_PORT_B && pin && ((pin&(pin-1))==0))	//on vï¿½rifie que pin est bien une puissance de 2.
 	{
 		if(!mcp23s17_initialized)
 		{
@@ -403,7 +403,7 @@ static void keyboard_pin_write(uint32_t port, uint16_t pin, bool state)
 static bool keyboard_pin_read(uint32_t port, uint16_t pin)
 {
 	bool ret = false;
-	if(port <= MCP23S17_PORT_B && pin && ((pin&(pin-1))==0))	//on v�rifie que pin est bien une puissance de 2.
+	if(port <= MCP23S17_PORT_B && pin && ((pin&(pin-1))==0))	//on vï¿½rifie que pin est bien une puissance de 2.
 	{
 		if(!mcp23s17_initialized)
 		{
@@ -424,9 +424,9 @@ static bool keyboard_pin_read(uint32_t port, uint16_t pin)
 }
 
 /**
- * @brief lecture du dernier character relach�
+ * @brief lecture du dernier character relaché
  *
- * @return la touche qui viens d'�tre relach�
+ * @return la touche qui viens d'être relaché
  */
 
 char BSP_MATRIX_KEYBOARD_process_main (void)
@@ -447,32 +447,25 @@ char BSP_MATRIX_KEYBOARD_process_main (void)
 		case INIT:
 			BSP_systick_add_callback_function(BSP_MATRIX_KEYBOARD_demo_process_1ms);
 
-			//A modifier en fonction du clavier utilisé : par défaut, personnalisé ou personnalisé 12 touches
-			//KEYBOARD_init(NULL);						//Initialisation du clavier avec le clavier par défaut
-			BSP_MATRIX_KEYBOARD_init(default_keyboard_keys);			//Initialisation du clavier avec un clavier personnalisé
-			//BSP_MATRIX_KEYBOARD_init(custom_keyboard_12_touchs);	//Initialisation du clavier avec un clavier personnalisé 12 touches
+			BSP_MATRIX_KEYBOARD_init(default_keyboard_keys);			//Initialisation du clavier avec un clavier personnalisÃ©
 
-			//pensez à renseigner les bons ports dans matrix_keyboard.h en fonction de votre hardware.
-			//printf("To run this demo, you should plug a matrix keyboard on the right ports. See matrix_keyboard.h\n");
 			state = RUN;
 			break;
 		case RUN:
 
-			//pour éviter les rebonds, il est important de lire le clavier toutes les 10ms environ.
+			//pour Ã©viter les rebonds, il est important de lire le clavier toutes les 10ms environ.
 			if(!t)	//A chaque fois que t vaut 0 (toutes les 10ms)...
 			{
-				t = 10;							//[ms] On recharge le chronomètre t pour 10ms...
+				t = 10;							//[ms] On recharge le chronomÃ¨tre t pour 10ms...
 				BSP_MATRIX_KEYBOARD_press_and_release_events(&press_key_event, &release_key_event, &all_touch_pressed);
 				switch(press_key_event)
 				{
 					case NO_KEY:
 						break;
 					case MANY_KEYS:
-						//printf("Many keys pressed : %lx\n", all_touch_pressed);
 						break;
 					default:
 						key_pressed = press_key_event;
-						//printf("%c pressed\n", press_key_event);
 						break;
 				}
 				switch(release_key_event)
@@ -480,10 +473,8 @@ char BSP_MATRIX_KEYBOARD_process_main (void)
 					case NO_KEY:
 						break;
 					case MANY_KEYS:
-						//printf("Many keys released : %lx\n", all_touch_pressed);
 						break;
 					default:
-						//printf("%c released\n", release_key_event);
 						break;
 				}
 			}
